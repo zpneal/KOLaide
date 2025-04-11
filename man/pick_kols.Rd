@@ -14,7 +14,8 @@ pick_kols(
   include = NULL,
   exclude = NULL,
   attribute = NULL,
-  weights = c(0.9, 0.9),
+  alpha = 0.9,
+  beta = 0.9,
   file = NULL
 )
 }
@@ -37,7 +38,9 @@ pick_kols(
 
 \item{attribute}{string or vector: if \code{network} is an \code{igraph} object, the name of a node attribute. if \code{network} is an adjacency matrix, a vector containing a node attribute.}
 
-\item{weights}{vector: a vector of length 2 providing weights \eqn{\alpha} and \eqn{\beta}, where \eqn{0.5 \leq \alpha \leq 1} and \eqn{0 \leq \beta \leq 2}}
+\item{alpha}{numeric: parameter to control relative weight of breadth and diversity in overall evaluation of KOL teams (\eqn{0.5 \leq \alpha \leq 1})}
+
+\item{beta}{numeric: parameter to control weight of team size in overall evaluation of KOL teams (\eqn{0 \leq \beta \leq 2})}
 
 \item{file}{string: filename to write a sorted list of possible KOL teams as a CSV.}
 }
@@ -65,12 +68,12 @@ several factors, which this function summarizes as ABCDE:
 Potential KOL teams are evaluated on the basis of breadth (B), Cost (C), and (if \code{attribute} is provided), Diversity (D)
 using \deqn{\frac{B}{C^\beta} \mbox{   or   } \frac{B^\alpha D^{1-\alpha}}{C^\beta}}
 
-The \eqn{\alpha} weight can take values \eqn{0.5 < \alpha < 1} and controls the weight placed on breadth relative to diversity.
+The \eqn{\alpha} parameter can take values \eqn{0.5 < \alpha < 1} and controls the weight placed on breadth relative to diversity.
 Smaller values of \eqn{\alpha} place less weight on breadth and more weight on diversity, while larger values of \eqn{\alpha}
 place more weight on breadth and less weight on diversity. The default (\eqn{\alpha = 0.9}) places the majority of weight on
 the breadth of the network that KOL teams cover, while still considering the team's diversity (primarily as a tie-breaker).
 
-The \eqn{\beta} weight can take values \eqn{0 < \beta < 2} and controls the cost of larger KOL team members. Smaller values of
+The \eqn{\beta} parameter can take values \eqn{0 < \beta < 2} and controls the cost of larger KOL team members. Smaller values of
 \eqn{\beta} imply decreasing marginal costs, while larger values of \eqn{\beta} imply increasing marginal costs. The default
 (\eqn{\beta = 0.9}) assumes that team members have a slight diminishing marginal cost (i.e. the cost of each additional
 team member is slightly smaller than the previous one).
