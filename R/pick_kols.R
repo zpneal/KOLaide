@@ -9,7 +9,8 @@
 #' @param include vector: names or indices of nodes that **must** be included on the KOL team
 #' @param exclude vector: names or indices of nodes that **can not** be included on the KOL team
 #' @param attribute string or vector: if \code{network} is an \code{igraph} object, the name of a node attribute. if \code{network} is an adjacency matrix, a vector containing a node attribute.
-#' @param weights vector: a vector of length 2 providing weights \eqn{\alpha} and \eqn{\beta}, where \eqn{0.5 \leq \alpha \leq 1} and \eqn{0 \leq \beta \leq 2}
+#' @param alpha numeric: parameter to control relative weight of breadth and diversity in overall evaluation of KOL teams (\eqn{0.5 \leq \alpha \leq 1})
+#' @param beta numeric: parameter to control weight of team size in overall evaluation of KOL teams (\eqn{0 \leq \beta \leq 2})
 #' @param file string: filename to write a sorted list of possible KOL teams as a CSV.
 #'
 #' @details
@@ -28,12 +29,12 @@
 #' Potential KOL teams are evaluated on the basis of breadth (B), Cost (C), and (if `attribute` is provided), Diversity (D)
 #'    using \deqn{\frac{B}{C^\beta} \mbox{   or   } \frac{B^\alpha D^{1-\alpha}}{C^\beta}}
 #'
-#' The \eqn{\alpha} weight can take values \eqn{0.5 < \alpha < 1} and controls the weight placed on breadth relative to diversity.
+#' The \eqn{\alpha} parameter can take values \eqn{0.5 < \alpha < 1} and controls the weight placed on breadth relative to diversity.
 #'   Smaller values of \eqn{\alpha} place less weight on breadth and more weight on diversity, while larger values of \eqn{\alpha}
 #'   place more weight on breadth and less weight on diversity. The default (\eqn{\alpha = 0.9}) places the majority of weight on
 #'   the breadth of the network that KOL teams cover, while still considering the team's diversity (primarily as a tie-breaker).
 #'
-#' The \eqn{\beta} weight can take values \eqn{0 < \beta < 2} and controls the cost of larger KOL team members. Smaller values of
+#' The \eqn{\beta} parameter can take values \eqn{0 < \beta < 2} and controls the cost of larger KOL team members. Smaller values of
 #'    \eqn{\beta} imply decreasing marginal costs, while larger values of \eqn{\beta} imply increasing marginal costs. The default
 #'    (\eqn{\beta = 0.9}) assumes that team members have a slight diminishing marginal cost (i.e. the cost of each additional
 #'    team member is slightly smaller than the previous one).
@@ -72,27 +73,27 @@ pick_kols <- function(network,
                       include = NULL,
                       exclude = NULL,
                       attribute = NULL,
-                      weights = c(.9, .9),
+                      alpha = 0.9,
+                      beta = 0.9,
                       file = NULL) {
 
   #### Parameter Checks ####
   if (!methods::is(network,"matrix") & !methods::is(network,"igraph")) {stop("`network must be either a matrix or igraph object`")}
-  if (length(range)!=2) {stop("`weights` must be a numeric vector of length 2")}
+  if (length(range)!=2) {stop("`range` must be a numeric vector of length 2")}
     min <- min(range)
     max <- max(range)
-    if (!is.numeric(min) | !is.numeric(max)) {stop("`min` and `max` must be positive integers")}
-    if (min%%1!=0 | min<1 | max%%1!=0 | max<1) {stop("`min` and `max` must be positive integers")}
+    if (!is.numeric(min) | !is.numeric(max)) {stop("`range` must be specified using positive integers")}
+    if (min%%1!=0 | min<1 | max%%1!=0 | max<1) {stop("`range` must be specified using positive integers")}
   if (!is.numeric(m)) {stop("`m` must be a positive integer")}
   if (m%%1!=0 | m<1) {stop("`m` must be a positive integer")}
   if (!is.null(top)) {
     if (!is.numeric(top)) {stop("`top` must be a positive integer")}
     if (top%%1!=0 | top<1) {stop("`top` must be a positive integer")}
   }
-  if (length(weights)!=2) {stop("`weights` must be a numeric vector of length 2")}
-    alpha <- weights[1]
-    beta <- weights[2]
-    if (!is.numeric(alpha) | !is.numeric(beta)) {stop("`weights` must be a numeric vector of length 2")}
-    if (alpha<0.5 | alpha>1 | beta<0 | beta>2) {stop("the values in `weights` must be within the specified ranges")}
+  if (!is.numeric(alpha)) {stop("`alpha` must be a numeric")}
+  if (!is.numeric(alpha)) {stop("`beta` must be a numeric")}
+  if (alpha<0.5 | alpha>1) {stop("`alpha` must be between 0.5 and 1")}
+  if (beta<0 | beta>2) {stop("`beta` must be between 0 and 2")}
 
   #If `attribute` is supplied and `network` is an igraph object, ensure attribute is present and extract it
   if (!is.null(attribute) & methods::is(network,"igraph")) {
@@ -169,7 +170,7 @@ pick_kols <- function(network,
   for (i in c(min:max)) {teams <- c(teams, utils::combn(eligible, i, simplify = FALSE))}  #Preliminary list
   if (!is.null(include)) {teams <- teams[which(lapply(teams, FUN = function(x) all(include %in% x))==TRUE)]}  #If `include` provided, remove teams missing required members
   if (length(teams)==0) {stop("There are no eligible KOL teams.")}
-  
+
   #### Evaluate KOL teams ####
   #Compute m-reach (fraction of non-KOL nodes reachable by a KOL in up to m steps in adjacency matrix M)
   if (goal == "diffusion") {
