@@ -1,12 +1,12 @@
 Package: KOLaide
-Title: Pick and plot key opinion leaders from a network given constraints
+Title: Pick and Plot Key Opinion Leaders from a Network Given Constraints
 Version: 0.0.1
 Authors@R: c(
 	person("Zachary", "Neal", email = "zpneal@msu.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3076-4995")),
 	person("Marcus", "Dockerty", email = "dockert1@msu.edu", role = c("aut")),
 	person("Jennifer Watling", "Neal", email = "jneal@msu.edu", role = c("ctb")),
 	person("Elise", "Cappella", email = "elise.cappella@nyu.edu", role = c("ctb")))
-Description: KOLaide assists researchers in choosing Key Opinion Leaders (KOLs) in a network to help disseminate or encourage adoption of an innovation by other network members. Potential KOL teams are evaluated using the ABCDE framework, which considers: (1) the team members' Availability, (2) the Breadth of the team's network coverage, (3) the Cost of recruiting a team of a given size, and (4) the Diversity of the team's members, (5) which are pooled into a single Evaluation score.
+Description: This package assists researchers in choosing Key Opinion Leaders (KOLs) in a network to help disseminate or encourage adoption of an innovation by other network members. Potential KOL teams are evaluated using the ABCDE framework, which considers: (1) the team members' Availability, (2) the Breadth of the team's network coverage, (3) the Cost of recruiting a team of a given size, and (4) the Diversity of the team's members, (5) which are pooled into a single Evaluation score.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,7 +19,6 @@ Imports:
 Suggests:
     knitr,
     rmarkdown
-VignetteBuilder: knitr
 URL: https://github.com/zpneal/KOLaide
 BugReports: https://github.com/zpneal/KOLaide/issues
-LazyData: true
+
