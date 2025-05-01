@@ -5,7 +5,7 @@
 [![](https://www.r-pkg.org/badges/version/KOLaide?color=orange)](https://cran.r-project.org/package=KOLaide)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/KOLaide?color=blue)](https://cran.r-project.org/package=KOLaide)
 [![](http://cranlogs.r-pkg.org/badges/last-month/KOLaide?color=green)](https://cran.r-project.org/package=KOLaide)
-[![status](https://tinyverse.netlify.com/badge/KOLaide)](https://CRAN.R-project.org/package=KOLaide)
+[![status](https://tinyverse.netlify.app/badge/KOLaide)](https://CRAN.R-project.org/package=KOLaide)
 <!-- badges: end -->
 
 
