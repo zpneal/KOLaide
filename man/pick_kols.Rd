@@ -20,7 +20,7 @@ pick_kols(
 )
 }
 \arguments{
-\item{network}{a unipartite unweighted network as an adjacency \code{matrix} or \code{\link{igraph}} object}
+\item{network}{a unipartite unweighted network as an adjacency \code{matrix} or \code{igraph} object}
 
 \item{tosource}{logical: edges point \emph{toward} a source of information}
 
