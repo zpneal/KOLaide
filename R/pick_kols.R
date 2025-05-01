@@ -1,6 +1,6 @@
 #' Pick key opinion leaders from a network given constraints
 #'
-#' @param network a unipartite unweighted network as an adjacency \code{matrix} or \code{\link{igraph}} object
+#' @param network a unipartite unweighted network as an adjacency \code{matrix} or \code{igraph} object
 #' @param tosource logical: edges point *toward* a source of information
 #' @param goal string: goal for the KOL team (either \code{"diffusion"} or \code{"adoption"})
 #' @param m integer: KOL team centrality parameter (\code{m == 1} is equivalent to simple degree centrality)
