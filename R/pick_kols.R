@@ -19,7 +19,7 @@
 #' members of a KOL team by returning a dataframe of possible teams. The selection of a KOL team often depends on
 #' several factors, which this function summarizes as ABCDE:
 #' * Availability - The availability of individuals to serve as a KOL. This can be controlled by the \code{include} and \code{exclude} parameters.
-#' * Breadth - The fraction of non-KOLs that the KOL team can influence. When \code{goal=="diffusion"}, breadth is measured as the fraction of non-KOLs that a KOL team can reach in \code{m} steps (i.e., m-reach). When \code{goal=="adoption"}, breadth is measured as the fraction of non-KOLs that are directly connected to at least \code{m} KOLs (i.e., m-contact).
+#' * Breadth - The fraction of non-KOLs that the KOL team can influence. When \code{goal=="diffusion"}, breadth is measured as the fraction of non-KOLs that a KOL team can reach in \code{m} steps (i.e., m-reach). When \code{goal=="adoption"}, breadth is measured as the fraction of non-KOLs that are directly connected to at least \code{m} KOLs (i.e., m-reinforcement).
 #' * Cost - The number of KOLs to be recruited and trained (i.e., team size).
 #' * Diversity - The fraction of values of `attribute` represented on the KOL team.
 #' * Evaluation - Potential KOL teams must be compared and evaluated in a way that balances these considerations.
@@ -182,10 +182,10 @@ pick_kols <- function(network,
     breadth <- unlist(lapply(teams, FUN = function(x) mreach(x, m, dist)))
   }
 
-  #Compute m-contact (fraction of non-KOL nodes directly connected to at least m KOLs in adjacency matrix M)
+  #Compute m-reinforcement (fraction of non-KOL nodes directly connected to at least m KOLs in adjacency matrix M)
   if (goal == "adoption") {
-    mcontact <- function(kols, m, M) {sum(colSums(M[kols,-kols])>=m) / (nrow(M) - length(kols))}
-    breadth <- unlist(lapply(teams, FUN = function(x) mcontact(x, m, M)))
+    mreinforcement <- function(kols, m, M) {sum(colSums(M[kols,-kols])>=m) / (nrow(M) - length(kols))}
+    breadth <- unlist(lapply(teams, FUN = function(x) mreinforcement(x, m, M)))
   }
 
   #If requested, compute team diversity
